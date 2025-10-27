@@ -1,0 +1,29 @@
+{
+  "name": "daiyanmozumder/laravel-flexsearch",
+  "description": "A flexible Laravel search and filter helper for Eloquent models.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Daiyan Mozumder Milton",
+      "email": "daiyan1091@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "DaiyanMozumder\\LaravelFlexSearch\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "DaiyanMozumder\\LaravelFlexSearch\\LaravelFlexSearchServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=8.0",
+    "illuminate/support": "^10.0|^11.0|^12.0"
+  }
+}
