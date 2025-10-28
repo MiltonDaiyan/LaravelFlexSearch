@@ -16,7 +16,8 @@ A simple and flexible Laravel package to easily apply **dynamic filters** and **
 
 You can install the package via Composer.
 
-```bash
+```
+bash
 composer require daiyanmozumder/laravel-flexsearch
 
 ```
@@ -69,7 +70,11 @@ Requirement: Required (No default value).
 
 Description: This is the starting point of your database query. It must be an existing Eloquent Query Builder instance. You pass this to FlexSearch, and the class modifies it by adding WHERE clauses for filtering and searching.
 
-Example Usage: Post::query() or User::where('is_active', true).
+Example Usage: 
+```
+Post::query() or User::where('is_active', true).
+```
+
 
 2. array $filters
 Type: array
@@ -80,7 +85,9 @@ Description: This parameter allows you to apply simple, direct equality filters.
 
 Logic: It applies a basic WHERE column = value for each item in the array.
 
-Example Usage: To filter posts by a specific category and status:
+Example Usage: 
+To filter posts by a specific category and status:
+
 ```
 $filters = [
     'category_id' => 5,
@@ -95,7 +102,10 @@ Default: null.
 
 Description: This is the primary input for the keyword search. It's the text the user types into the search bar. The question mark (?) indicates that passing a null value is acceptable, in which case no keyword search is performed.
 
-Example Usage: "Laravel package" or "best article".
+Example Usage: 
+```
+"Laravel package" or "best article".
+```
 
 4. array $searchableColumns
 Type: array
