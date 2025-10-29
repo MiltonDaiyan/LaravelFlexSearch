@@ -15,7 +15,7 @@
 
 <img src="https://github.com/daiyanmozumder.png" width="150" height="150" style="border-radius:50%;" alt="Daiyan Mozumder">
 
-**Created by [Daiyan Mozumder](https://github.com/daiyanmozumder)**
+**Created by [Daiyan Mozumder](https://github.com/MiltonDaiyan)**
 
 </div>
 
