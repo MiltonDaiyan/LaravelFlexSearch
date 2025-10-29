@@ -17,9 +17,17 @@ class FlexSearch
      */
     public function apply(Builder $query, array $filters = [], ?string $searchTerm = null, array $searchableColumns = [])
     {
-        // Apply key-value filters
+        // Apply key-value filters (with support for comparison operators)
         foreach ($filters as $field => $value) {
-            if (!empty($value)) {
+            if ($value === null || $value === '') {
+                continue;
+            }
+
+            // Detect operator in key (e.g., "budget<=", "price>=", "created_at!=")
+            if (preg_match('/^([a-zA-Z0-9_]+)([<>!=]+)$/', $field, $matches)) {
+                [$full, $column, $operator] = $matches;
+                $query->where($column, $operator, $value);
+            } else {
                 $query->where($field, $value);
             }
         }
