@@ -13,7 +13,7 @@
   <img src="https://img.shields.io/packagist/l/daiyanmozumder/laravel-flexsearch.svg" alt="License" />
 </a>
 
-<img src="https://github.com/daiyanmozumder.png" width="150" height="150" style="border-radius:50%;" alt="Daiyan Mozumder">
+<img src="[https://avatars.githubusercontent.com/u/108240573?v=4]" width="150" height="150" style="border-radius:50%;" alt="Daiyan Mozumder">
 
 **Created by [Daiyan Mozumder](https://github.com/MiltonDaiyan)**
 
