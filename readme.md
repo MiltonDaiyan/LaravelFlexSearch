@@ -341,8 +341,8 @@ If you find this package helpful, please ⭐ **star it** on [GitHub](https://git
 
 <br>
 
-[![GitHub stars](https://img.shields.io/github/stars/MiltonDaiyan/laravel-flexsearch?style=social)](https://github.com/MiltonDaiyan/laravel-flexsearch)
-[![GitHub forks](https://img.shields.io/github/forks/MiltonDaiyan/laravel-flexsearch?style=social)](https://github.com/MiltonDaiyan/laravel-flexsearch)
+[![GitHub stars](https://img.shields.io/github/stars/MiltonDaiyan/laravel-flexsearch?style=social)](https://github.com/MiltonDaiyan/LaravelFlexSearch)
+[![GitHub forks](https://img.shields.io/github/forks/MiltonDaiyan/laravel-flexsearch?style=social)](https://github.com/MiltonDaiyan/LaravelFlexSearch)
 
 <br>
 
@@ -355,4 +355,5 @@ _Empowering Laravel developers with flexible search solutions_
 ---
 
 </div>
+
 
