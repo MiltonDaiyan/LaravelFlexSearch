@@ -1,391 +1,357 @@
----
+<div align="center">
 
 # 🔍 Laravel FlexSearch
 
+### Powerful Dynamic Filtering, Relationship & Keyword Search for Laravel Eloquent
+
+[![Packagist Version](https://img.shields.io/packagist/v/daiyanmozumder/laravel-flexsearch.svg?style=for-the-badge&logo=packagist&logoColor=white)](https://packagist.org/packages/daiyanmozumder/laravel-flexsearch)
+[![License](https://img.shields.io/packagist/l/daiyanmozumder/laravel-flexsearch.svg?style=for-the-badge)](LICENSE.md)
+[![PHP Version](https://img.shields.io/packagist/php-v/daiyanmozumder/laravel-flexsearch.svg?style=for-the-badge&logo=php&logoColor=white)](https://packagist.org/packages/daiyanmozumder/laravel-flexsearch)
+[![Downloads](https://img.shields.io/packagist/dt/daiyanmozumder/laravel-flexsearch.svg?style=for-the-badge)](https://packagist.org/packages/daiyanmozumder/laravel-flexsearch)
+
+**Created with ❤ by [Daiyan Mozumder](https://github.com/MiltonDaiyan)**
+
+[Features](#features) •
+[Installation](#installation) •
+[Quick Start](#quick-start) •
+[Documentation](#documentation) •
+[Examples](#usage-examples) •
+[Contributing](#contributing)
+
+---
+
+</div>
+
+## 📑 Table of Contents
+
+-   [✨ Features](#features)
+-   [📦 Installation](#installation)
+-   [⚡ Quick Start](#quick-start)
+-   [🧾 Documentation](#documentation)
+-   [🧠 How Keyword Search Works](#how-keyword-search-works)
+-   [🔗 Relationship Filtering & Search](#relationship-filtering--search)
+-   [💡 Usage Examples](#usage-examples)
+-   [🎁 Benefits](#benefits)
+-   [🤝 Contributing](#contributing)
+-   [📝 License](#license)
+-   [🔮 Roadmap](#roadmap)
+
+---
+
+## ✨ Features
+
 <div align="center">
 
-### Powerful Dynamic Filtering & Search for Laravel Eloquent
+|                                      🎯 *Dynamic Filters*                                      |                                     🔍 *Keyword Search*                                     |                                    🔗 *Relationship Aware*                                     |
+| :----------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------: |
+| Apply simple or operator-based filters (=, >, <, >=, !=) for flexible database queries | Perform powerful full-text-like search across multiple model columns — even in relationships! | Supports filtering and searching through related models using dot notation (e.g. company.name) |
 
-<a href="https://packagist.org/packages/daiyanmozumder/laravel-flexsearch">
-  <img src="https://img.shields.io/packagist/v/daiyanmozumder/laravel-flexsearch.svg" alt="Packagist Version" />
-</a>
-<a href="LICENSE.md">
-  <img src="https://img.shields.io/packagist/l/daiyanmozumder/laravel-flexsearch.svg" alt="License" />
-</a>
+</div>
 
-**Created by [Daiyan Mozumder](https://github.com/MiltonDaiyan)**
+<br>
+
+<div align="center">
+
+### 🚀 *Zero Configuration Required*
+
+🎉 No service provider or config needed — works instantly out of the box!
 
 </div>
 
 ---
 
-## Table of Contents
-
-- [Features](#features)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Documentation](#documentation)
-- [How Keyword Search Works](#how-keyword-search-works)
-- [Usage Examples](#usage-examples)
-- [Benefits](#benefits)
-- [Contributing](#contributing)
-- [License](#license)
-- [Roadmap](#roadmap)
-
----
-
-<a id="features"></a>
-
-## ✨ Features
-
-<table>
-<tr>
-<td width="33%" valign="top">
-
-### 🎯 Dynamic Filters
-
-Apply simple where clause filters based on key-value pairs (e.g., filtering by status, category, or any column).
-
-</td>
-<td width="33%" valign="top">
-
-### 🔍 Keyword Search
-
-Perform powerful, full-text-like search across multiple specified model columns effortlessly.
-
-</td>
-<td width="33%" valign="top">
-
-### 🧠 Split-Term Search
-
-Automatically splits search terms by spaces and ensures every word is found, providing highly relevant results.
-
-</td>
-</tr>
-</table>
-
----
-
-<a id="installation"></a>
-
 ## 📦 Installation
 
-Install the package via Composer:
+Install via Composer:
 
 bash
 composer require daiyanmozumder/laravel-flexsearch
 
 
-> *🎉 Note:* This package does not require any service provider registration or configuration files. It works out of the box!
+> 💡 *No additional setup needed!* The package is ready to use immediately after installation.
 
 ---
 
-<a id="quick-start"></a>
-
-## Quick Start
-
-Here's a simple example to get you started in seconds:
+## ⚡ Quick Start
 
 php
 use DaiyanMozumder\LaravelFlexSearch\FlexSearch;
-use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class PostController extends Controller
+class UserController extends Controller
 {
     public function index(Request $request, FlexSearch $flexSearch)
     {
-        // Start with your base query
-        $query = Post::query();
+        $query = User::query()->with('company');
 
-        // Define search parameters
-        $filters = $request->only(['category_id', 'status']);
+        $filters = $request->only(['status', 'company.name']);
         $searchTerm = $request->input('q');
-        $searchableColumns = ['title', 'body', 'slug'];
+        $searchable = ['name', 'email', 'company.name'];
 
-        // Apply flexible search
-        $posts = $flexSearch->apply(
-            $query,
-            $filters,
-            $searchTerm,
-            $searchableColumns
-        )->paginate(15);
+        $users = $flexSearch->apply($query, $filters, $searchTerm, $searchable)
+                            ->paginate(15);
 
-        return view('posts.index', compact('posts'));
+        return view('users.index', compact('users'));
     }
 }
 
 
-*That's it!* Your search and filtering functionality is ready. 🎊
+<div align="center">
+
+✅ *That's it!* You now have dynamic filters, keyword search, and relational querying in one powerful line.
+
+</div>
 
 ---
 
-<a id="documentation"></a>
+## 🧾 Documentation
 
-## Documentation
-
-### The apply() Method
-
-The apply() method is the heart of FlexSearch, accepting four parameters:
-
-| Parameter            | Type      | Required | Default | Description                                   |
-| -------------------- | --------- | -------- | ------- | --------------------------------------------- |
-| $query             | Builder | ✅ Yes   | -       | Your existing Eloquent Query Builder instance |
-| $filters           | array   | ❌ No    | []    | Key-value pairs for exact column matches      |
-| $searchTerm        | ?string | ❌ No    | null  | The keyword(s) to search for                  |
-| $searchableColumns | array   | ❌ No    | []    | Database columns to search within             |
-
----
-
-### Parameter Details
-
-#### 1. **Builder $query** (Required)
-
-The starting point of your database query. Pass an Eloquent Query Builder instance.
+### Method Signature
 
 php
-// Examples:
-Post::query()
-User::where('is_active', true)
-Product::with('category')
+public function apply(
+    Builder $query,
+    array $filters = [],
+    ?string $searchTerm = null,
+    array $searchableColumns = []
+): Builder
 
 
-#### 2. **array $filters** (Optional)
+### Parameters
 
-Apply direct equality filters. Array keys must match column names.
+| Parameter            | Type      | Required | Description                                       |
+| -------------------- | --------- | :------: | ------------------------------------------------- |
+| $query             | Builder |    ✅    | Eloquent query builder instance                   |
+| $filters           | array   |    ❌    | Dynamic key-value filters with optional operators |
+| $searchTerm        | ?string |    ❌    | Keyword(s) for text-based search                  |
+| $searchableColumns | array   |    ❌    | Columns (including relation columns) to search    |
+
+### 🧩 Operator-Based Filtering
+
+FlexSearch supports powerful operator-based filtering:
 
 php
-// Example:
 $filters = [
-    'category_id' => 5,
-    'status' => 'published',
-    'featured' => true
+    'price>=' => 100,
+    'created_at!=' => '2024-01-01',
+    'status' => 'active',
 ];
 
-// Generates: WHERE category_id = 5 AND status = 'published' AND featured = 1
-
-
-#### 3. **?string $searchTerm** (Optional)
-
-The text input for keyword search. Can be null.
-
-php
-// Examples:
-"Laravel package"
-"best article about PHP"
-"javascript tutorial"
-
-
-#### 4. **array $searchableColumns** (Optional)
-
-Database columns to include in the keyword search.
-
-php
-// Example:
-$searchableColumns = [
-    'title',
-    'description',
-    'tags',
-    'author_name'
-];
-
-
----
-
-<a id="how-keyword-search-works"></a>
-
-## How Keyword Search Works
-
-FlexSearch uses intelligent split-term searching for maximum relevance:
-
-### Search Logic
-
-1. *Split by Spaces:* The search term is divided into individual words
-2. *AND Between Terms:* Every word must be found somewhere
-3. *OR Across Columns:* Each word can match any searchable column
-
-### Example Query
-
-<table>
-<tr>
-<td width="50%">
-
-*Input:*
-
-php
-$searchTerm = "red sport";
-$searchableColumns = ['name', 'description'];
-
-
-</td>
-<td width="50%">
 
 *Generated SQL:*
 
 sql
+WHERE price >= 100
+  AND created_at != '2024-01-01'
+  AND status = 'active'
+
+
+---
+
+## 🔗 Relationship Filtering & Search
+
+You can filter or search within related models using *dot notation* for seamless relationship querying.
+
+### 📌 Example 1: Filtering on Relationships
+
+php
+$filters = [
+    'company.name=' => 'Ashlar Tech',
+    'status' => 'active'
+];
+
+$query = User::with('company');
+$flexSearch->apply($query, $filters)->get();
+
+
+*Generated SQL (simplified):*
+
+sql
+WHERE EXISTS (
+    SELECT * FROM companies
+    WHERE users.company_id = companies.id
+      AND companies.name = 'Ashlar Tech'
+)
+AND users.status = 'active'
+
+
+### 🔎 Example 2: Searching on Related Columns
+
+php
+$searchTerm = 'daiyan ashlar';
+$searchableColumns = ['name', 'email', 'company.name'];
+
+$query = User::with('company');
+$flexSearch->apply($query, [], $searchTerm, $searchableColumns)->get();
+
+
+*Result:* Finds users where name, email, or company.name matches any search term.
+
+---
+
+## 🧠 How Keyword Search Works
+
+FlexSearch splits your input into words, then applies smart logic:
+
+<div align="center">
+
+*AND* between words → every term must match  
+*OR* between columns → each term can match any field
+
+</div>
+
+### Example:
+
+php
+$searchTerm = "red sport";
+$columns = ['title', 'description'];
+
+
+*Generated Query:*
+
+sql
 WHERE (
-    (name LIKE '%red%' OR description LIKE '%red%')
+    (title LIKE '%red%' OR description LIKE '%red%')
     AND
-    (name LIKE '%sport%' OR description LIKE '%sport%')
+    (title LIKE '%sport%' OR description LIKE '%sport%')
 )
 
 
-</td>
-</tr>
-</table>
-
-This ensures that results contain *both* "red" *and* "sport" somewhere in the searchable columns, providing highly relevant matches.
-
 ---
-
-<a id="usage-examples"></a>
 
 ## 💡 Usage Examples
 
-### Example 1: Simple Product Search
+### 🛍 Example 1: Product Search
 
 php
-public function searchProducts(Request $request, FlexSearch $flexSearch)
-{
-    $products = $flexSearch->apply(
-        Product::query(),
-        $request->only(['category_id', 'brand']),
-        $request->input('search'),
-        ['name', 'description', 'sku']
-    )->get();
-
-    return response()->json($products);
-}
+$products = (new FlexSearch())->apply(
+    Product::query(),
+    ['category_id' => 3, 'price>=' => 100],
+    'cotton tshirt',
+    ['name', 'description', 'brand.name']
+)->get();
 
 
-### Example 2: User Search with Relationships
+### 👥 Example 2: User Search with Relationships
 
 php
-public function searchUsers(Request $request, FlexSearch $flexSearch)
-{
-    $users = $flexSearch->apply(
-        User::with('profile'),
-        ['role' => 'admin'],
-        $request->input('q'),
-        ['name', 'email', 'phone']
-    )->paginate(20);
+$query = User::query()->with('company');
 
-    return view('admin.users', compact('users'));
-}
+$users = (new FlexSearch())->apply(
+    $query,
+    ['company.name=' => 'Ashlar Tech', 'status' => 'active'],
+    'daiyan',
+    ['name', 'email', 'company.name']
+)->paginate(10);
 
 
-### Example 3: Advanced Blog Search
+### 📰 Example 3: Blog Post Search
 
 php
-public function search(Request $request, FlexSearch $flexSearch)
-{
-    $query = Post::published()
-                 ->with('author', 'tags')
-                 ->latest();
-
-    $posts = $flexSearch->apply(
-        $query,
-        [
-            'category_id' => $request->category,
-            'featured' => $request->featured
-        ],
-        $request->search,
-        ['title', 'body', 'excerpt', 'meta_description']
-    )->paginate(15);
-
-    return view('posts.search', compact('posts'));
-}
+$posts = (new FlexSearch())->apply(
+    Post::with('author', 'tags'),
+    ['category_id' => $request->category],
+    $request->search,
+    ['title', 'body', 'author.name', 'tags.name']
+)->paginate(15);
 
 
 ---
-
-<a id="benefits"></a>
 
 ## 🎁 Benefits
 
-| Feature                   | Benefit                           |
-| ------------------------- | --------------------------------- |
-| 🚀 *Zero Configuration* | Install and use immediately       |
-| 🔧 *Highly Flexible*    | Works with any Eloquent model     |
-| 📦 *Lightweight*        | Minimal overhead and dependencies |
-| 🎯 *Relevant Results*   | Smart split-term search logic     |
-| 💡 *Easy to Learn*      | Simple, intuitive API             |
-| 🔗 *Chain Compatible*   | Works with existing query chains  |
-| ⚡ *Performance*        | Optimized database queries        |
-| 🛠 *No Config Files*    | Zero configuration required       |
+<div align="center">
+
+|         Feature          | Description                                          |
+| :----------------------: | :--------------------------------------------------- |
+|    🚀 *Zero Setup*     | Works instantly, no config files required            |
+|  🔧 *Highly Flexible*  | Handles filters, relations, and keywords with ease   |
+| ⚡ *Optimized Queries* | Uses whereHas intelligently for better performance |
+|  💡 *Readable Syntax*  | Expressive, minimal, and clean API                   |
+|   🧱 *ORM Friendly*    | Seamlessly integrates with Eloquent relationships    |
+|     🔗 *Chainable*     | Works perfectly with query chains and other builders |
+
+</div>
 
 ---
-
-<a id="contributing"></a>
 
 ## 🤝 Contributing
 
-Contributions are *welcome* and will be fully *credited*! We accept contributions via Pull Requests on [GitHub](https://github.com/daiyanmozumder/laravel-flexsearch).
+We welcome contributions! 🎉
 
-### Pull Request Guidelines:
+Pull requests are welcome on [GitHub](https://github.com/MiltonDaiyan/laravel-flexsearch).
 
-- *PSR-2 Coding Standard* - Check code style with composer check-style and fix with composer fix-style
-- *Add tests!* - Your patch won't be accepted if it doesn't have tests
-- *Document changes* - Make sure the README and other documentation are up-to-date
-- *One pull request per feature* - Send multiple PRs for multiple features
-- *Send coherent history* - Make sure commits are logically organized
+### Guidelines:
+
+-   ✅ Follow *PSR-12* coding standards
+-   ✅ Add tests where applicable
+-   ✅ Keep commits meaningful and scoped
+-   ✅ Document all new features
+
+<div align="center">
+
+### 🌟 Join our community of contributors!
+
+</div>
 
 ---
-
-## 🔒 Security
-
-If you discover any security related issues, please email the maintainer instead of using the issue tracker.
-
----
-
-<a id="license"></a>
 
 ## 📝 License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (MIT). See [LICENSE.md](LICENSE.md) for details.
 
 ---
 
 ## 🙏 Credits
 
-- *[Daiyan Mozumder](https://github.com/daiyanmozumder)* - Creator & Maintainer
-- *[All Contributors](https://github.com/daiyanmozumder/laravel-flexsearch/contributors)* - Thank you!
-
----
-
 <div align="center">
 
-### 💖 Show Your Support
+*Created & Maintained by*  
+*[Daiyan Mozumder](https://github.com/MiltonDaiyan)*
 
-If you find this package helpful, please consider giving it a ⭐ on [GitHub](https://github.com/daiyanmozumder/laravel-flexsearch)!
-
-*Made with ❤ by [Daiyan Mozumder](https://github.com/daiyanmozumder)*
-
-[Report Bug](https://github.com/daiyanmozumder/laravel-flexsearch/issues) - [Request Feature](https://github.com/daiyanmozumder/laravel-flexsearch/issues)
+Special thanks to all [contributors](https://github.com/MiltonDaiyan/laravel-flexsearch/graphs/contributors) who help make this project better! 🎉
 
 </div>
 
 ---
-
-<a id="roadmap"></a>
 
 ## 🔮 Roadmap
 
-This project is a work in progress. Upcoming features include:
+<div align="center">
 
-- [ ] Advanced filtering operators (>, <, >=, <=, BETWEEN)
-- [ ] Relationship search support
-- [ ] Custom search scopes
-- [ ] Search result highlighting
-- [ ] Query caching support
-- [ ] Fuzzy search capabilities
+| Status | Feature                                         |
+| :----: | :---------------------------------------------- |
+|   ✅   | Relationship-based search                       |
+|   ✅   | Operator-based filtering (>, <, >=, !=) |
+|   🚧   | BETWEEN and IN support                      |
+|   🚧   | Fuzzy search and match ranking                  |
+|   📅   | Result highlighting                             |
+|   📅   | Query caching                                   |
+
+</div>
 
 ---
 
 <div align="center">
 
-*Happy Searching! 🔍✨*
+## 💖 Show Your Support
 
-</div>
+If you find this package helpful, please ⭐ *star it* on [GitHub](https://github.com/MiltonDaiyan/laravel-flexsearch)!
+
+<br>
+
+[![GitHub stars](https://img.shields.io/github/stars/MiltonDaiyan/laravel-flexsearch?style=social)](https://github.com/MiltonDaiyan/laravel-flexsearch/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/MiltonDaiyan/laravel-flexsearch?style=social)](https://github.com/MiltonDaiyan/laravel-flexsearch/network/members)
+
+<br>
 
 ---
+
+*Made with ❤ by [Daiyan Mozumder](https://github.com/MiltonDaiyan)*
+
+Empowering Laravel developers with flexible search solutions
+
+---
+
+</div>
